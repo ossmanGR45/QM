@@ -1,0 +1,18 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace QM.Models
+{
+    public class RiskCauseMapping : EntityBase
+    {
+        
+        public int RiskID { get; set; }
+
+        public int CauseID { get; set; }
+
+        #region single Navigation Property
+        public Risk Risk { get; set; }
+        public Cause Cause { get; set; }
+        #endregion
+
+    }
+}
