@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace QM.Models
+namespace QM.Models.Mapping
 {
     public class RiskActionMapping : EntityBase
     {
