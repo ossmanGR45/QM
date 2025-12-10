@@ -1,3 +1,4 @@
+using QM.Models.Mapping;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

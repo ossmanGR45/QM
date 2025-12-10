@@ -12,8 +12,7 @@ namespace QM.Models
         public string ContactEmail { get; set; }
         public string ContactPhoneNumber { get; set; }
 
-        // Navigation Properties
-        public ICollection<Actions> Actions { get; set; }
+       
         
 
     }

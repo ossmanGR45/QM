@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace QM.Models
+namespace QM.Models.Mapping
 {
     public class RequestCauseMapping : EntityBase
     {

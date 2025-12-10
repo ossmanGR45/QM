@@ -1,3 +1,4 @@
+using QM.Models.Mapping;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,15 +13,15 @@ namespace QM.Models
         
         public string ActionDescription  { get; set; }
 
-        
+        public string ActionName { get; set; }
         public ActionType ActionType { get; set; }
 
         // Foreign Key to Entity
         
-        public int ResponsibleEntityID { get; set; }
+        public int ResponsibleID { get; set; }
         
         
-        public  Entity ResponsibleEntity { get; set; }
+        public  Responsible Responsible { get; set; }
 
         // Navigation Properties
         public  ICollection<RiskActionMapping> RiskActions { get; set; }
