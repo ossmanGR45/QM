@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace QM.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class initDB : Migration
+    public partial class initiDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,19 @@ namespace QM.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Responsibles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Responsibles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -123,22 +136,23 @@ namespace QM.DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ActionDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActionName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ActionType = table.Column<int>(type: "int", nullable: false),
-                    ResponsibleEntityID = table.Column<int>(type: "int", nullable: false)
+                    ResponsibleID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Actions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Actions_Entities_ResponsibleEntityID",
-                        column: x => x.ResponsibleEntityID,
-                        principalTable: "Entities",
+                        name: "FK_Actions_Responsibles_ResponsibleID",
+                        column: x => x.ResponsibleID,
+                        principalTable: "Responsibles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequestCauseMapping",
+                name: "RequestCauseMappings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -148,15 +162,15 @@ namespace QM.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestCauseMapping", x => x.Id);
+                    table.PrimaryKey("PK_RequestCauseMappings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RequestCauseMapping_Causes_CauseID",
+                        name: "FK_RequestCauseMappings_Causes_CauseID",
                         column: x => x.CauseID,
                         principalTable: "Causes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RequestCauseMapping_RiskRequests_RequestID",
+                        name: "FK_RequestCauseMappings_RiskRequests_RequestID",
                         column: x => x.RequestID,
                         principalTable: "RiskRequests",
                         principalColumn: "Id",
@@ -164,7 +178,33 @@ namespace QM.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequestRiskMapping",
+                name: "RequestEntityMappings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RequestID = table.Column<int>(type: "int", nullable: false),
+                    EntityID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RequestEntityMappings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RequestEntityMappings_Entities_EntityID",
+                        column: x => x.EntityID,
+                        principalTable: "Entities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RequestEntityMappings_RiskRequests_RequestID",
+                        column: x => x.RequestID,
+                        principalTable: "RiskRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RequestRiskMappings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -174,15 +214,15 @@ namespace QM.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestRiskMapping", x => x.Id);
+                    table.PrimaryKey("PK_RequestRiskMappings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RequestRiskMapping_RiskRequests_RequestID",
+                        name: "FK_RequestRiskMappings_RiskRequests_RequestID",
                         column: x => x.RequestID,
                         principalTable: "RiskRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RequestRiskMapping_Risks_RiskID",
+                        name: "FK_RequestRiskMappings_Risks_RiskID",
                         column: x => x.RiskID,
                         principalTable: "Risks",
                         principalColumn: "Id",
@@ -269,7 +309,7 @@ namespace QM.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RequestActionMapping",
+                name: "RequestActionMappings",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -279,15 +319,15 @@ namespace QM.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RequestActionMapping", x => x.Id);
+                    table.PrimaryKey("PK_RequestActionMappings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RequestActionMapping_Actions_ActionID",
+                        name: "FK_RequestActionMappings_Actions_ActionID",
                         column: x => x.ActionID,
                         principalTable: "Actions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RequestActionMapping_RiskRequests_RequestID",
+                        name: "FK_RequestActionMappings_RiskRequests_RequestID",
                         column: x => x.RequestID,
                         principalTable: "RiskRequests",
                         principalColumn: "Id",
@@ -331,38 +371,48 @@ namespace QM.DataAccess.Migrations
                 column: "CauseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Actions_ResponsibleEntityID",
+                name: "IX_Actions_ResponsibleID",
                 table: "Actions",
-                column: "ResponsibleEntityID");
+                column: "ResponsibleID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestActionMapping_ActionID",
-                table: "RequestActionMapping",
+                name: "IX_RequestActionMappings_ActionID",
+                table: "RequestActionMappings",
                 column: "ActionID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestActionMapping_RequestID",
-                table: "RequestActionMapping",
+                name: "IX_RequestActionMappings_RequestID",
+                table: "RequestActionMappings",
                 column: "RequestID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestCauseMapping_CauseID",
-                table: "RequestCauseMapping",
+                name: "IX_RequestCauseMappings_CauseID",
+                table: "RequestCauseMappings",
                 column: "CauseID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestCauseMapping_RequestID",
-                table: "RequestCauseMapping",
+                name: "IX_RequestCauseMappings_RequestID",
+                table: "RequestCauseMappings",
                 column: "RequestID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestRiskMapping_RequestID",
-                table: "RequestRiskMapping",
+                name: "IX_RequestEntityMappings_EntityID",
+                table: "RequestEntityMappings",
+                column: "EntityID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestEntityMappings_RequestID",
+                table: "RequestEntityMappings",
                 column: "RequestID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RequestRiskMapping_RiskID",
-                table: "RequestRiskMapping",
+                name: "IX_RequestRiskMappings_RequestID",
+                table: "RequestRiskMappings",
+                column: "RequestID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RequestRiskMappings_RiskID",
+                table: "RequestRiskMappings",
                 column: "RiskID");
 
             migrationBuilder.CreateIndex(
@@ -408,13 +458,16 @@ namespace QM.DataAccess.Migrations
                 name: "ActionCauseMappings");
 
             migrationBuilder.DropTable(
-                name: "RequestActionMapping");
+                name: "RequestActionMappings");
 
             migrationBuilder.DropTable(
-                name: "RequestCauseMapping");
+                name: "RequestCauseMappings");
 
             migrationBuilder.DropTable(
-                name: "RequestRiskMapping");
+                name: "RequestEntityMappings");
+
+            migrationBuilder.DropTable(
+                name: "RequestRiskMappings");
 
             migrationBuilder.DropTable(
                 name: "RiskActionMappings");
@@ -424,6 +477,9 @@ namespace QM.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "RiskGoalMappings");
+
+            migrationBuilder.DropTable(
+                name: "Entities");
 
             migrationBuilder.DropTable(
                 name: "RiskRequests");
@@ -441,7 +497,7 @@ namespace QM.DataAccess.Migrations
                 name: "StrategicGoals");
 
             migrationBuilder.DropTable(
-                name: "Entities");
+                name: "Responsibles");
 
             migrationBuilder.DropTable(
                 name: "Categories");

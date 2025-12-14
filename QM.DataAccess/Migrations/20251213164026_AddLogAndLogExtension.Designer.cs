@@ -12,8 +12,8 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209190001_add_the_responsible_table_and_disconicted_the_entity_table_and_add_a_new_mapping_nigga")]
-    partial class add_the_responsible_table_and_disconicted_the_entity_table_and_add_a_new_mapping_nigga
+    [Migration("20251213164026_AddLogAndLogExtension")]
+    partial class AddLogAndLogExtension
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -89,36 +89,6 @@ namespace QM.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Causes");
-                });
-
-            modelBuilder.Entity("QM.Models.Entity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContactEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ContactPhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EntityName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Entities");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.ActionCauseMapping", b =>
@@ -325,9 +295,6 @@ namespace QM.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("Before")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -338,22 +305,11 @@ namespace QM.DataAccess.Migrations
                     b.Property<int>("Impact")
                         .HasColumnType("int");
 
-                    b.Property<int>("ImpactAfter")
-                        .HasColumnType("int");
-
                     b.Property<int>("Likelihood")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LikelihoodAfter")
                         .HasColumnType("int");
 
                     b.Property<bool>("Occured")
                         .HasColumnType("bit");
-
-                    b.Property<string>("OutcomeSummary")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Responsible")
                         .IsRequired()
@@ -397,9 +353,6 @@ namespace QM.DataAccess.Migrations
                         .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AssessmentID")
-                        .HasColumnType("int");
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -449,6 +402,36 @@ namespace QM.DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("StrategicGoals");
+                });
+
+            modelBuilder.Entity("QM.Models.WorkEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContactPhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EntityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Entities");
                 });
 
             modelBuilder.Entity("QM.Models.Actions", b =>
@@ -509,7 +492,7 @@ namespace QM.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("QM.Models.Request", "Request")
-                        .WithMany("RequestCause")
+                        .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -521,7 +504,7 @@ namespace QM.DataAccess.Migrations
 
             modelBuilder.Entity("QM.Models.Mapping.RequestEntityMapping", b =>
                 {
-                    b.HasOne("QM.Models.Entity", "Entity")
+                    b.HasOne("QM.Models.WorkEntity", "Entity")
                         .WithMany()
                         .HasForeignKey("EntityID")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -651,8 +634,6 @@ namespace QM.DataAccess.Migrations
             modelBuilder.Entity("QM.Models.Request", b =>
                 {
                     b.Navigation("RequestAction");
-
-                    b.Navigation("RequestCause");
 
                     b.Navigation("RequestRisk");
                 });

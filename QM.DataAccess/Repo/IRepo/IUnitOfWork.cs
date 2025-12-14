@@ -7,7 +7,6 @@ namespace QM.DataAccess.Repo.IRepo
     public interface IUnitOfWork 
     {
         
-        IRepo<T> Repository<T>() where T : class;
         Task<int> SaveAsync();
     }
 }

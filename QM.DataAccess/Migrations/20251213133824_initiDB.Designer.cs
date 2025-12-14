@@ -12,8 +12,8 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251209192210_weeee")]
-    partial class weeee
+    [Migration("20251213133824_initiDB")]
+    partial class initiDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -509,7 +509,7 @@ namespace QM.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("QM.Models.Request", "Request")
-                        .WithMany("RequestCause")
+                        .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -651,8 +651,6 @@ namespace QM.DataAccess.Migrations
             modelBuilder.Entity("QM.Models.Request", b =>
                 {
                     b.Navigation("RequestAction");
-
-                    b.Navigation("RequestCause");
 
                     b.Navigation("RequestRisk");
                 });

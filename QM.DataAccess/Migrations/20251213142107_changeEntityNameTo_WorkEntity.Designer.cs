@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QM.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251213142107_changeEntityNameTo_WorkEntity")]
+    partial class changeEntityNameTo_WorkEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -292,6 +295,9 @@ namespace QM.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Before")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -302,11 +308,22 @@ namespace QM.DataAccess.Migrations
                     b.Property<int>("Impact")
                         .HasColumnType("int");
 
+                    b.Property<int>("ImpactAfter")
+                        .HasColumnType("int");
+
                     b.Property<int>("Likelihood")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikelihoodAfter")
                         .HasColumnType("int");
 
                     b.Property<bool>("Occured")
                         .HasColumnType("bit");
+
+                    b.Property<string>("OutcomeSummary")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Responsible")
                         .IsRequired()
@@ -350,6 +367,9 @@ namespace QM.DataAccess.Migrations
                         .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AssessmentID")
+                        .HasColumnType("int");
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");

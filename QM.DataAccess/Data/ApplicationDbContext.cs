@@ -17,9 +17,9 @@ namespace QM.DataAccess.Data
         public DbSet<StrategicGoal> StrategicGoals { get; set; }
         public DbSet<Actions> Actions { get; set; }
         public DbSet<Cause> Causes { get; set; }
-        public DbSet<Entity> Entities { get; set; }
+        public DbSet<Responsible> Entities { get; set; }
         public DbSet<Request> RiskRequests { get; set; }
-        public DbSet<Responsible> Responsibles { get; set; }
+        public DbSet<WorkEntity> Responsibles { get; set; }
 
         // Junction Tables
         public DbSet<RiskCauseMapping> RiskCauseMappings { get; set; }

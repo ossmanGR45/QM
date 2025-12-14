@@ -5,6 +5,6 @@
         public int RequestID { get; set; }
         public Request Request { get; set; }
         public int EntityID { get; set; }
-        public Entity Entity { get; set; }
+        public Responsible Entity { get; set; }
     }
 }

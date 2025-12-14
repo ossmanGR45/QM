@@ -21,7 +21,7 @@ namespace QM.Models
         public int ResponsibleID { get; set; }
         
         
-        public  Responsible Responsible { get; set; }
+        public  WorkEntity Responsible { get; set; }
 
         // Navigation Properties
         public  ICollection<RiskActionMapping> RiskActions { get; set; }
