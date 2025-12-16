@@ -16,9 +16,10 @@ namespace QM.Models
 
         public enum RequestStatus
         {
-            Accepted = 0,
+            Rejected = 0,
             InProgress = 1,
-            Rejected = 2,
+            underReview = 2,
+            Accepted = 3,
         }
 
         public enum Likelihood

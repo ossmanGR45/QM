@@ -18,13 +18,11 @@ namespace QM.Models
         // Foreign Key to Category
         public int CategoryID { get; set; }
 
-        public int AssessmentID { get; set; }
-
         // Navigation Properties
         public Category Category { get; set; }
         public ICollection<RiskCauseMapping> RiskCauses { get; set; }
         public ICollection<RiskActionMapping> RiskActions { get; set; }
-        public ICollection<RiskGoalMapping> RiskGoals { get; set; }
+        public ICollection<RiskStrategicGoalMapping> RiskGoals { get; set; }
         public ICollection<RequestRiskMapping> RequestRisks { get; set; }
 
     }

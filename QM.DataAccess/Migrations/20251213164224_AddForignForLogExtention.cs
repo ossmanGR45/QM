@@ -5,7 +5,7 @@
 namespace QM.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class weeee : Migration
+    public partial class AddForignForLogExtention : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

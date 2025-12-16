@@ -12,8 +12,8 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251207120428_init DB")]
-    partial class initDB
+    [Migration("20251214161000_someupdates")]
+    partial class someupdates
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,30 +24,6 @@ namespace QM.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("QM.Models.ActionCauseMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActionID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CauseID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionID");
-
-                    b.HasIndex("CauseID");
-
-                    b.ToTable("ActionCauseMappings");
-                });
 
             modelBuilder.Entity("QM.Models.Actions", b =>
                 {
@@ -62,15 +38,14 @@ namespace QM.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ActionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ActionType")
                         .HasColumnType("int");
 
-                    b.Property<int>("ResponsibleEntityID")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ResponsibleEntityID");
 
                     b.ToTable("Actions");
                 });
@@ -111,7 +86,266 @@ namespace QM.DataAccess.Migrations
                     b.ToTable("Causes");
                 });
 
-            modelBuilder.Entity("QM.Models.Entity", b =>
+            modelBuilder.Entity("QM.Models.Mapping.ActionCauseMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CauseID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionID");
+
+                    b.HasIndex("CauseID");
+
+                    b.ToTable("ActionCauseMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.ActionResponsibleMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ResponsibleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionId");
+
+                    b.HasIndex("ResponsibleId");
+
+                    b.ToTable("ActionResponsibleMapping");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RequestActionMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("RequestActionMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RequestCauseMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CauseID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CauseID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("RequestCauseMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RequestEntityMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EntityID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntityID");
+
+                    b.HasIndex("RequestID");
+
+                    b.ToTable("RequestEntityMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RequestRiskMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RequestID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiskID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestID");
+
+                    b.HasIndex("RiskID");
+
+                    b.ToTable("RequestRiskMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActionID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiskID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActionID");
+
+                    b.HasIndex("RiskID");
+
+                    b.ToTable("RiskActionMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RiskCauseMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CauseID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiskID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CauseID");
+
+                    b.HasIndex("RiskID");
+
+                    b.ToTable("RiskCauseMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RiskGoalMapping", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GoalID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RiskID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StrategicGoalId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RiskID");
+
+                    b.HasIndex("StrategicGoalId");
+
+                    b.ToTable("RiskGoalMappings");
+                });
+
+            modelBuilder.Entity("QM.Models.Request", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ExpectedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Impact")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Likelihood")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Occured")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Responsible")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Year")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RiskRequests");
+                });
+
+            modelBuilder.Entity("QM.Models.Responsible", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,133 +375,6 @@ namespace QM.DataAccess.Migrations
                     b.ToTable("Entities");
                 });
 
-            modelBuilder.Entity("QM.Models.Request", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Before")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ExpectedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Impact")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ImpactAfter")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Likelihood")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LikelihoodAfter")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Occured")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("OutcomeSummary")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Responsible")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Year")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("RiskRequests");
-                });
-
-            modelBuilder.Entity("QM.Models.RequestActionMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActionID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionID");
-
-                    b.HasIndex("RequestID");
-
-                    b.ToTable("RequestActionMapping");
-                });
-
-            modelBuilder.Entity("QM.Models.RequestCauseMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CauseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CauseID");
-
-                    b.HasIndex("RequestID");
-
-                    b.ToTable("RequestCauseMapping");
-                });
-
-            modelBuilder.Entity("QM.Models.RequestRiskMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RiskID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasIndex("RiskID");
-
-                    b.ToTable("RequestRiskMapping");
-                });
-
             modelBuilder.Entity("QM.Models.Risk", b =>
                 {
                     b.Property<int>("Id")
@@ -276,9 +383,6 @@ namespace QM.DataAccess.Migrations
                         .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AssessmentID")
-                        .HasColumnType("int");
 
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
@@ -308,81 +412,6 @@ namespace QM.DataAccess.Migrations
                     b.ToTable("Risks");
                 });
 
-            modelBuilder.Entity("QM.Models.RiskActionMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActionID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RiskID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionID");
-
-                    b.HasIndex("RiskID");
-
-                    b.ToTable("RiskActionMappings");
-                });
-
-            modelBuilder.Entity("QM.Models.RiskCauseMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CauseID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RiskID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CauseID");
-
-                    b.HasIndex("RiskID");
-
-                    b.ToTable("RiskCauseMappings");
-                });
-
-            modelBuilder.Entity("QM.Models.RiskGoalMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("GoalID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RiskID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StrategicGoalId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RiskID");
-
-                    b.HasIndex("StrategicGoalId");
-
-                    b.ToTable("RiskGoalMappings");
-                });
-
             modelBuilder.Entity("QM.Models.StrategicGoal", b =>
                 {
                     b.Property<int>("Id")
@@ -405,7 +434,25 @@ namespace QM.DataAccess.Migrations
                     b.ToTable("StrategicGoals");
                 });
 
-            modelBuilder.Entity("QM.Models.ActionCauseMapping", b =>
+            modelBuilder.Entity("QM.Models.WorkEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnOrder(0);
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Responsibles");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.ActionCauseMapping", b =>
                 {
                     b.HasOne("QM.Models.Actions", "Action")
                         .WithMany("ActionCauses")
@@ -424,18 +471,26 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Cause");
                 });
 
-            modelBuilder.Entity("QM.Models.Actions", b =>
+            modelBuilder.Entity("QM.Models.Mapping.ActionResponsibleMapping", b =>
                 {
-                    b.HasOne("QM.Models.Entity", "ResponsibleEntity")
-                        .WithMany("Actions")
-                        .HasForeignKey("ResponsibleEntityID")
+                    b.HasOne("QM.Models.Actions", "Action")
+                        .WithMany("ActionResponsibles")
+                        .HasForeignKey("ActionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ResponsibleEntity");
+                    b.HasOne("QM.Models.Responsible", "Responsible")
+                        .WithMany("ActionResponsibles")
+                        .HasForeignKey("ResponsibleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Action");
+
+                    b.Navigation("Responsible");
                 });
 
-            modelBuilder.Entity("QM.Models.RequestActionMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RequestActionMapping", b =>
                 {
                     b.HasOne("QM.Models.Actions", "Action")
                         .WithMany("RequestActions")
@@ -454,7 +509,7 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("QM.Models.RequestCauseMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RequestCauseMapping", b =>
                 {
                     b.HasOne("QM.Models.Cause", "Cause")
                         .WithMany("RequestCauses")
@@ -463,7 +518,7 @@ namespace QM.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("QM.Models.Request", "Request")
-                        .WithMany("RequestCause")
+                        .WithMany()
                         .HasForeignKey("RequestID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -473,7 +528,26 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("QM.Models.RequestRiskMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RequestEntityMapping", b =>
+                {
+                    b.HasOne("QM.Models.Responsible", "Entity")
+                        .WithMany()
+                        .HasForeignKey("EntityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("QM.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entity");
+
+                    b.Navigation("Request");
+                });
+
+            modelBuilder.Entity("QM.Models.Mapping.RequestRiskMapping", b =>
                 {
                     b.HasOne("QM.Models.Request", "Request")
                         .WithMany("RequestRisk")
@@ -492,18 +566,7 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Risk");
                 });
 
-            modelBuilder.Entity("QM.Models.Risk", b =>
-                {
-                    b.HasOne("QM.Models.Category", "Category")
-                        .WithMany("Risks")
-                        .HasForeignKey("CategoryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("QM.Models.RiskActionMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
                 {
                     b.HasOne("QM.Models.Actions", "Action")
                         .WithMany("RiskActions")
@@ -522,7 +585,7 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Risk");
                 });
 
-            modelBuilder.Entity("QM.Models.RiskCauseMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RiskCauseMapping", b =>
                 {
                     b.HasOne("QM.Models.Cause", "Cause")
                         .WithMany("RiskCauses")
@@ -541,7 +604,7 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Risk");
                 });
 
-            modelBuilder.Entity("QM.Models.RiskGoalMapping", b =>
+            modelBuilder.Entity("QM.Models.Mapping.RiskGoalMapping", b =>
                 {
                     b.HasOne("QM.Models.Risk", "Risk")
                         .WithMany("RiskGoals")
@@ -560,9 +623,22 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("StrategicGoal");
                 });
 
+            modelBuilder.Entity("QM.Models.Risk", b =>
+                {
+                    b.HasOne("QM.Models.Category", "Category")
+                        .WithMany("Risks")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("QM.Models.Actions", b =>
                 {
                     b.Navigation("ActionCauses");
+
+                    b.Navigation("ActionResponsibles");
 
                     b.Navigation("RequestActions");
 
@@ -583,18 +659,16 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("RiskCauses");
                 });
 
-            modelBuilder.Entity("QM.Models.Entity", b =>
-                {
-                    b.Navigation("Actions");
-                });
-
             modelBuilder.Entity("QM.Models.Request", b =>
                 {
                     b.Navigation("RequestAction");
 
-                    b.Navigation("RequestCause");
-
                     b.Navigation("RequestRisk");
+                });
+
+            modelBuilder.Entity("QM.Models.Responsible", b =>
+                {
+                    b.Navigation("ActionResponsibles");
                 });
 
             modelBuilder.Entity("QM.Models.Risk", b =>

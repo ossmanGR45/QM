@@ -1,4 +1,6 @@
-﻿using QM.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using QM.DataAccess.Data;
 using QM.DataAccess.Repo.IRepo;
 using System;
 using System.Collections.Generic;
@@ -8,35 +10,51 @@ namespace QM.DataAccess.Repo
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _db;
+
+        private readonly ApplicationDbContext context;
 
         // Dictionary to store repositories we have already created (Caching)
-        private Dictionary<Type, object> _repositories;
+        
 
         public UnitOfWork(ApplicationDbContext db)
         {
-            _db = db;
-            _repositories = new Dictionary<Type, object>();
+            context = db;
+            
         }
 
-        // The "Best Practice" way to get a Generic Repo without hardcoding properties
-        public IRepo<T> Repository<T>() where T : class
+
+
+        public static UnitOfWork GetInstance()
         {
-            // If we already created this repo, return it
-            if (_repositories.ContainsKey(typeof(T)))
-            {
-                return _repositories[typeof(T)] as IRepo<T>;
-            }
 
-            // Otherwise, create a new one and save it
-            var repo = new Repo<T>(_db);
-            _repositories.Add(typeof(T), repo);
-            return repo;
+
+            string connectionString = "Server=localhost\\SQLEXPRESS;Database=QM;Trusted_Connection=true;TrustServerCertificate=true";
+
+            
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>() 
+                .UseSqlServer(connectionString)
+                .Options;
+
+        
+            var context = new ApplicationDbContext(options);
+
+            var unitOfWork = new UnitOfWork(context);
+
+
+
+            return unitOfWork;
         }
+
+        public ApplicationDbContext GetContext()
+        {
+            return context;
+        }
+        // The "Best Practice" way to get a Generic Repo without hardcoding properties
+       
 
         public async Task<int> SaveAsync()
         {
-            return await _db.SaveChangesAsync();
+            return await context.SaveChangesAsync();
         }
     }
 }

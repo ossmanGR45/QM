@@ -1,16 +1,18 @@
-﻿using System;
+using QM.Models.Mapping;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace QM.Models
 {
     public class Responsible : EntityBase
     {
-        public string Name { get; set; }
-
-        public ICollection<Actions> Actions { get; set; }
         
+
+        public string EntityName { get; set; }
+        public string ContactName { get; set; }
+        public string ContactEmail { get; set; }
+        public string ContactPhoneNumber { get; set; }
+        public ICollection<ActionResponsibleMapping> ActionResponsibles { get; set; }
+
     }
 }
