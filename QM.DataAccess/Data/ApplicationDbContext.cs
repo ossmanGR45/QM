@@ -25,11 +25,11 @@ namespace QM.DataAccess.Data
         public DbSet<RiskCauseMapping> RiskCauseMappings { get; set; }
         public DbSet<ActionCauseMapping> ActionCauseMappings { get; set; }
         public DbSet<RiskActionMapping> RiskActionMappings { get; set; }
-        public DbSet<RiskGoalMapping> RiskGoalMappings { get; set; }
+        public DbSet<RiskStrategicGoalMapping> RiskGoalMappings { get; set; }
         public DbSet<RequestActionMapping> RequestActionMappings { get; set; }
         public DbSet<RequestCauseMapping> RequestCauseMappings { get; set; }
         public DbSet<RequestRiskMapping> RequestRiskMappings { get; set; }
-        public DbSet<RequestEntityMapping> RequestEntityMappings { get; set; }
+        public DbSet<RequestResponsibleMapping> RequestEntityMappings { get; set; }
 
     }
 }

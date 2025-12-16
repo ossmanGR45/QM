@@ -12,6 +12,6 @@ namespace QM.Models
         public string GoalDescription { get; set; }
 
         // Navigation Property
-        public ICollection<RiskGoalMapping> RiskGoals { get; set; }
+        public ICollection<RiskStrategicGoalMapping> RiskGoals { get; set; }
     }
 }

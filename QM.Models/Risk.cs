@@ -22,7 +22,7 @@ namespace QM.Models
         public Category Category { get; set; }
         public ICollection<RiskCauseMapping> RiskCauses { get; set; }
         public ICollection<RiskActionMapping> RiskActions { get; set; }
-        public ICollection<RiskGoalMapping> RiskGoals { get; set; }
+        public ICollection<RiskStrategicGoalMapping> RiskGoals { get; set; }
         public ICollection<RequestRiskMapping> RequestRisks { get; set; }
 
     }

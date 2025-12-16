@@ -17,17 +17,20 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace QM.DataAccess.Repo
 {
-    public class Repo<T> : IRepo<T> where T : class
+    public class Repo<T> : IRepo<T> where T : EntityBase 
     {
 
 
-        private readonly ApplicationDbContext _db;
-                    
+        private readonly ApplicationDbContext context;
+        
+
+
         private DbSet<T> dbSet;
-        public Repo(ApplicationDbContext db)
+        public Repo(UnitOfWork uow) 
         {
-            _db = db;
-            this.dbSet = _db.Set<T>();
+            context = uow.GetContext();
+
+            this.dbSet = context.Set<T>();
         }
                      
         public async Task<List<T>> FindAllAsync(Expression<Func<T, bool>>? filter = null, string? orderBy = null, Pagger? paggerBy = null, List<String>? include = null)

@@ -11,20 +11,20 @@ namespace QM.DataAccess.Repo
     public class UnitOfWork : IUnitOfWork
     {
 
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext context;
 
         // Dictionary to store repositories we have already created (Caching)
         
 
-        private UnitOfWork(ApplicationDbContext db)
+        public UnitOfWork(ApplicationDbContext db)
         {
-            _db = db;
+            context = db;
             
         }
 
 
 
-        public static UnitOfWork getInstance()
+        public static UnitOfWork GetInstance()
         {
 
 
@@ -35,11 +35,8 @@ namespace QM.DataAccess.Repo
                 .UseSqlServer(connectionString)
                 .Options;
 
-            // 3. Create the context using the options
-            using var context = new ApplicationDbContext(options);
-
-            // Optional: Ensure the database/tables exist (Use with caution!)
-            // context.Database.EnsureCreated(); 
+        
+            var context = new ApplicationDbContext(options);
 
             var unitOfWork = new UnitOfWork(context);
 
@@ -48,12 +45,16 @@ namespace QM.DataAccess.Repo
             return unitOfWork;
         }
 
+        public ApplicationDbContext GetContext()
+        {
+            return context;
+        }
         // The "Best Practice" way to get a Generic Repo without hardcoding properties
        
 
         public async Task<int> SaveAsync()
         {
-            return await _db.SaveChangesAsync();
+            return await context.SaveChangesAsync();
         }
     }
 }

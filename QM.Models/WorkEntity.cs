@@ -12,7 +12,7 @@ namespace QM.Models
 
         public string Name { get; set; }
 
-        public ICollection<Actions> Actions { get; set; }
+        
         
     }
 }
