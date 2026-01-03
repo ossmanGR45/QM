@@ -20,6 +20,7 @@ namespace QM.Models
             InProgress = 1,
             underReview = 2,
             Accepted = 3,
+            closed = 4,
         }
 
         public enum Likelihood

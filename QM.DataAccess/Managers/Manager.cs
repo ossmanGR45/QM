@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QM.DataAccess.Repo;
+using QM.DataAccess.Repo.IRepo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace QM.DataAccess.Managers
 
         public UnitOfWork UnitOfWork;
 
-        public Manager(UnitOfWork uow) 
+        public Manager(IUnitOfWork uow) 
         { 
 
 
@@ -34,9 +35,9 @@ namespace QM.DataAccess.Managers
 
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id,List<string>? include= null)
         {
-            return await Repo.GetByIdAsync(id);
+            return await Repo.GetByIdAsync(id,include);
         }
 
         public async Task<T> AddUpdateAsync(T entity)

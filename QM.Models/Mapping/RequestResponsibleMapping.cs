@@ -1,4 +1,6 @@
-﻿namespace QM.Models.Mapping
+﻿using QM.Models.DataModels;
+
+namespace QM.Models.Mapping
 {
     public class RequestResponsibleMapping : EntityBase
     {
