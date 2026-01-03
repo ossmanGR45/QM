@@ -1,3 +1,4 @@
+using QM.Models.DataModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace QM.Models.Mapping
@@ -8,6 +9,8 @@ namespace QM.Models.Mapping
         public int RiskID { get; set; }
 
         public int ActionID { get; set; }
+
+        public bool Custom { get; set; }
 
         #region single Navigation Property
         public Risk Risk { get; set; }

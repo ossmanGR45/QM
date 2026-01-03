@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using LinqKit;
 
 
 namespace QM.DataAccess.Repo
@@ -26,24 +27,44 @@ namespace QM.DataAccess.Repo
 
 
         private DbSet<T> dbSet;
-        public Repo(UnitOfWork uow) 
+        public Repo(IUnitOfWork uow) 
         {
             context = uow.GetContext();
 
             this.dbSet = context.Set<T>();
         }
                      
-        public async Task<List<T>> FindAllAsync(Expression<Func<T, bool>>? filter = null, string? orderBy = null, Pagger? paggerBy = null, List<String>? include = null)
+        public async Task<List<T>> FindAllAsync(Expression<Func<T, bool>>? filter = null, string? orderBy = null, Pagger? paggerBy = null, List<string>? include = null)
         {
             // 1. Start with the DbSet
-            IQueryable<T> query = dbSet;
+            IQueryable<T> query = dbSet.AsExpandable();
 
             // 2. Apply Eager Loading (Include)
             if (include != null)
             {
+                // Get all public properties of type T once for efficiency
+                var entityProperties = typeof(T).GetProperties()
+                    .Select(p => p.Name)
+                    .ToList();
+
                 foreach (var inc in include)
                 {
-                    query = query.Include(inc);
+                    // Find the property name that matches case-insensitively
+                    var actualPropertyName = entityProperties
+                        .FirstOrDefault(p => string.Equals(p, inc, StringComparison.OrdinalIgnoreCase));
+
+                    if (!string.IsNullOrEmpty(actualPropertyName))
+                    {
+                        query = query.Include(actualPropertyName);
+                    }
+                    else
+                    {
+                        // Optional: If it's a nested include (e.g., "Actions.Category")
+                        // This simple logic handles top-level properties. 
+                        // For nested, just use the original string and ensure callers are careful,
+                        // or stick to the matched property name.
+                        query = query.Include(inc);
+                    }
                 }
             }
 
@@ -73,12 +94,42 @@ namespace QM.DataAccess.Repo
 
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id,List<string>? include = null)
         {
+
+            var query = dbSet.AsQueryable();
+            if (include != null)
+            {
+                // Get all public properties of type T once for efficiency
+                var entityProperties = typeof(T).GetProperties()
+                    .Select(p => p.Name)
+                    .ToList();
+
+                foreach (var inc in include)
+                {
+                    // Find the property name that matches case-insensitively
+                    var actualPropertyName = entityProperties
+                        .FirstOrDefault(p => string.Equals(p, inc, StringComparison.OrdinalIgnoreCase));
+
+                    if (!string.IsNullOrEmpty(actualPropertyName))
+                    {
+                        query = query.Include(actualPropertyName);
+                    }
+                    else
+                    {
+                        // Optional: If it's a nested include (e.g., "Actions.Category")
+                        // This simple logic handles top-level properties. 
+                        // For nested, just use the original string and ensure callers are careful,
+                        // or stick to the matched property name.
+                        query = query.Include(inc);
+                    }
+                }
+            }
+
             // Use FindAsync with a single key value
-            var entity = await dbSet.FindAsync(id);
+            var entity = await query.Where(e => e.Id == id).FirstOrDefaultAsync();
             // If entity is null, handle accordingly (optional)
-            return entity!;
+            return entity;
         }
 
 

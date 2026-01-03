@@ -1,3 +1,4 @@
+using QM.Models.DataModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace QM.Models.Mapping

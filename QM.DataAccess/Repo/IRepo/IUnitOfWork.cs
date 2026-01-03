@@ -6,7 +6,9 @@ namespace QM.DataAccess.Repo.IRepo
 {
     public interface IUnitOfWork 
     {
-        
+
+        ApplicationDbContext GetContext();
+
         Task<int> SaveAsync();
     }
 }

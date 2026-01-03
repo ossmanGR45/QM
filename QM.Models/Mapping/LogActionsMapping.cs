@@ -7,11 +7,14 @@ using System.Threading.Tasks;
 
 namespace QM.Models.Mapping
 {
-    public class RequestActionMapping : EntityBase
+    public class LogActionsMapping : EntityBase
     {
-        public int RequestID { get; set; }
-        public Request? Request { get; set; } = null;
+        public int logId { get; set; }
         public int ActionID { get; set; }
-        public Actions? Action { get; set; } = null;
+
+        #region single Navigation Property
+        public Log Log { get; set; }
+        public Actions Actions { get; set; }
+        #endregion
     }
 }
