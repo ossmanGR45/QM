@@ -46,7 +46,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(responsibleEntities);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(responsibleEntities.First().Id);
 //        }
@@ -60,7 +60,7 @@
 
 //            var action = new Actions
 //            {
-                
+
 //                ActionDescription = "This is a test action",
 //                ActionType = QM.Models.Enums.ActionType.Avoidance,
 //                Custom = false,
@@ -69,7 +69,7 @@
 
 
 //            await manager.AddUpdateAsync(action);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(action.Id);
 //        }
@@ -90,7 +90,7 @@
 
 
 //            await manager.AddUpdateAsync(category);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(category.Id);
 //        }
@@ -108,7 +108,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(cause);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(cause.Id);
 //        }
@@ -125,7 +125,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(workEntity);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(workEntity.Id);
 //        }
@@ -154,7 +154,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(request);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(request.Id);
 //        }
@@ -180,7 +180,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(risk);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(risk.Id);
 //        }
@@ -198,7 +198,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(strategicGoal);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(strategicGoal.Id);
 //        }
@@ -232,7 +232,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(riskCauseMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(riskCauseMapping.Id);
 
@@ -260,7 +260,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(actionResponsibleMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(actionResponsibleMapping.Id);
 
@@ -288,7 +288,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(requestActionMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(requestActionMapping.Id);
 //        }
@@ -314,7 +314,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(requestRiskMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(requestRiskMapping.Id);
 //        }
@@ -340,7 +340,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(riskActionMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(riskActionMapping.Id);
 //        }
@@ -366,7 +366,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(actionCauseMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(actionCauseMapping.Id);
 
@@ -394,7 +394,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(riskStrategicGoalMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(riskStrategicGoalMapping.Id);
 
@@ -417,7 +417,7 @@
 //                Responsible = responsible
 //            };
 //            await manager.AddUpdateAsync(requestResponsibleMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 //            Console.WriteLine(requestResponsibleMapping.Id);
 //        }
 
@@ -442,7 +442,7 @@
 //            };
 
 //            await manager.AddUpdateAsync(requestCauseMapping);
-//            await unitOfWork.SaveAsync();
+//            await unitOfWork.SaveChangesAsync();
 
 //            Console.WriteLine(requestCauseMapping.Id);
 //        }

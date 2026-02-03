@@ -66,6 +66,8 @@ namespace QM.Controller
 
             var _manager = new Manager<Risk>(_uow);
             var createdRisk = await _manager.AddUpdateAsync(risk);
+
+            await _uow.SaveChangesAsync();
             return CreatedAtAction(nameof(GetRisks), new { id = createdRisk.Id }, createdRisk);
 
         }

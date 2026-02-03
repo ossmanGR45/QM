@@ -22,7 +22,6 @@ namespace QM.Controller
     [ApiController]
     public class ActionsController : BaseController
     {
-        protected readonly ApplicationDbContext _context;
         
         public ActionsController(IUnitOfWork uow) : base(uow)
         {
@@ -64,7 +63,17 @@ namespace QM.Controller
             return Ok(records);
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateAction([FromBody] Actions action)
+        {
+            if (action == null)
+                return BadRequest("Action data is null.");
 
+            var _manager = new Manager<Actions>(_uow);
+            var createdAction = await _manager.AddUpdateAsync(action);
+            await _uow.SaveChangesAsync();
 
+            return CreatedAtAction(nameof(GetActions), new { id = createdAction.Id }, createdAction);
+        }
     }
 }

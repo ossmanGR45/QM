@@ -8,10 +8,10 @@ namespace QM.Models.DataModels
     {
         
 
-        public string GoalReference { get; set; }
-        public string GoalDescription { get; set; }
+        public string? GoalReference { get; set; }
+        public string? GoalDescription { get; set; }
 
         // Navigation Property
-        public ICollection<RiskStrategicGoalMapping> RiskGoals { get; set; }
+        public ICollection<RiskStrategicGoalMapping>? RiskGoals { get; set; }
     }
 }

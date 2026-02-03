@@ -40,5 +40,17 @@ namespace QM.Controller
 
             return Ok(records);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateStrategicGoal([FromBody] StrategicGoal strategicGoal)
+        {
+            if (strategicGoal == null)
+                return BadRequest("Strategic Goal data is null.");
+
+            var _manager = new Manager<StrategicGoal>(_uow);
+            var createdStrategicGoal = await _manager.AddUpdateAsync(strategicGoal);
+            await _uow.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetStrategicGoals), new { id = createdStrategicGoal.Id }, createdStrategicGoal);
+        }
     }
 }

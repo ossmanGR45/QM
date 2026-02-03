@@ -9,6 +9,6 @@ namespace QM.DataAccess.Repo.IRepo
 
         ApplicationDbContext GetContext();
 
-        Task<int> SaveAsync();
+        Task<int> SaveChangesAsync();
     }
 }

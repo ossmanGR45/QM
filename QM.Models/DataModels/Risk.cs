@@ -7,30 +7,24 @@ namespace QM.Models.DataModels
 {
     public class Risk : EntityBase
     {
-    
-        public string RiskName { get; set; }
-        public string RiskDescription { get; set; }
-        public string Location { get; set; }
-
-        public Likelihood likelihood { get; set; }
-        public Impact Impact { get; set; }
-
-        public bool Custom { get; set; }
-
-
+        public string? RiskName { get; set; } = null;
+        public string? RiskDescription { get; set; } = null;
+        public string? Location { get; set; } = null;
+        public Likelihood? likelihood { get; set; } = null;
+        public Impact? Impact { get; set; } = null;
+        public bool? Custom { get; set; } = null;
 
         // Foreign Key to Category
-        public int? UserId { get; set; }
+        public int? UserId { get; set; } = null;
         public int CategoryID { get; set; }
 
         // Navigation Properties
-        public User? User { get; set; }
-        public Category Category { get; set; }
-        public ICollection<RiskCauseMapping> RiskCauses { get; set; }
-        public ICollection<RiskActionMapping> RiskActions { get; set; }
-        public ICollection<RiskStrategicGoalMapping> RiskGoals { get; set; }
-        public ICollection<Request> Requests { get; set; }
-
+        public User? User { get; set; } = null;
+        public Category? Category { get; set; }
+        public ICollection<RiskCauseMapping>? RiskCauses { get; set; } = null;
+        public ICollection<RiskActionMapping>? RiskActions { get; set; } = null;
+        public ICollection<RiskStrategicGoalMapping>? RiskGoals { get; set; } = null;
+        public ICollection<Request>? Requests { get; set; } = null;
     }
 }
 

@@ -6,16 +6,12 @@ namespace QM.Models.DataModels
 {
     public class Cause : EntityBase
     {
-        
-        
-        public string CauseDescription { get; set; }
-
-        public bool Custom { get; set; }
+        public string? CauseDescription { get; set; } = null;
+        public bool? Custom { get; set; } = null;
 
         // Navigation Properties
-        public ICollection<RiskCauseMapping> RiskCauses { get; set; }
-        public ICollection<ActionCauseMapping> ActionCauses { get; set; }
-        public ICollection<RequestCauseMapping> RequestCauses { get; set; }
-
+        public ICollection<RiskCauseMapping>? RiskCauses { get; set; } = null;
+        public ICollection<ActionCauseMapping>? ActionCauses { get; set; } = null;
+        public ICollection<RequestCauseMapping>? RequestCauses { get; set; } = null;
     }
 }

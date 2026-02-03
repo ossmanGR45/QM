@@ -49,5 +49,17 @@ namespace QM.Controller
 
             return Ok(records);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateResponsible([FromBody] Responsible responsible)
+        {
+            if (responsible == null)
+                return BadRequest("Responsible data is null.");
+
+            var _manager = new Manager<Responsible>(_uow);
+            var createdResponsible = await _manager.AddUpdateAsync(responsible);
+            await _uow.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetResponsibles), new { id = createdResponsible.Id }, createdResponsible);
+        }
     }
 }

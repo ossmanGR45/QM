@@ -8,17 +8,14 @@ namespace QM.Models.DataModels
 {
     public class Actions : EntityBase
     {
-
-        public string? ActionDescription  { get; set; }
-        public ActionType? ActionType { get; set; }
-        public bool? Custom { get; set; }
-
+        public string? ActionDescription { get; set; } = null;
+        public ActionType? ActionType { get; set; } = null;
+        public bool? Custom { get; set; } = null;
 
         // Navigation Properties
-        public  ICollection<RiskActionMapping> RiskActions { get; set; }
-        public  ICollection<ActionCauseMapping> ActionCauses { get; set; }
-        public  ICollection<RequestActionMapping> RequestActions { get; set; }
-        public  ICollection<ActionResponsibleMapping> ActionResponsibles { get; set; }
-        public  ICollection<LogActionsMapping> LogActionsMappings { get; set; }
+        public ICollection<RiskActionMapping>? RiskActions { get; set; } = null;
+        public ICollection<ActionCauseMapping>? ActionCauses { get; set; } = null;
+        public ICollection<RequestActionMapping>? RequestActions { get; set; } = null;
+        public ICollection<ActionResponsibleMapping>? ActionResponsibles { get; set; } = null;
     }
 }

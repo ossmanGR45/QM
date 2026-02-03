@@ -36,5 +36,17 @@ namespace QM.Controller
 
             return Ok(records);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateCause([FromBody] Cause cause)
+        {
+            if (cause == null)
+                return BadRequest("Cause data is null.");
+
+            var _manager = new Manager<Cause>(_uow);
+            var createdCause = await _manager.AddUpdateAsync(cause);
+            await _uow.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCauses), new { id = createdCause.Id }, createdCause);
+        }
     }
 }
