@@ -135,6 +135,7 @@ namespace QM.DataAccess.Repo
 
         public async Task<T> AddUpdateAsync(T entity)
         {
+
             dbSet.Update(entity);
 
             return await Task.FromResult(entity);

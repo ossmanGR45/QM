@@ -16,9 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer( builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddDefaultIdentity<User>()
-    .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -63,6 +67,10 @@ builder.Services.AddControllers()
 
 
 
+// Add this line!
+builder.Services.AddHttpContextAccessor();
+
+
 
 var app = builder.Build();
 
@@ -98,11 +106,10 @@ using (var scope = app.Services.CreateScope())
     var userManager = services.GetRequiredService<UserManager<User>>();
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole<int>>>();
 
-    var email = "AbedAlrahman@gmail.com";
-    var password = "Abed@12345"; // Ensure this meets complexity requirements
+    var email = "mohammedarqan@gmail.com";
+    var password = "Mohammed@12345"; // Ensure this meets complexity requirements
     var roleName = "Admin";
 
-    // 1. Ensure the Role exists
     if (!await roleManager.RoleExistsAsync(roleName))
     {
         await roleManager.CreateAsync(new IdentityRole<int>(roleName));
@@ -110,6 +117,7 @@ using (var scope = app.Services.CreateScope())
 
     // 2. Create the User
     var user = await userManager.FindByEmailAsync(email);
+    
     if (user == null)
     {
         user = new User

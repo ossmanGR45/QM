@@ -36,5 +36,17 @@ namespace QM.Controller
 
             return Ok(records);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateCategory([FromBody] Category category)
+        {
+            if (category == null)
+                return BadRequest("Category data is null.");
+
+            var _manager = new Manager<Category>(_uow);
+            var createdCategory = await _manager.AddUpdateAsync(category);
+            await _uow.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetCategories), new { id = createdCategory.Id }, createdCategory);
+        }
     }
 }

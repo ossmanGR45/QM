@@ -11,7 +11,10 @@ namespace QM.Models.DataModels
     {
 
         
-        public ICollection<Risk> risk { get; set; }
-        public ICollection<Request> request { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? RefreshTokenExpiryTime { get; set; }
+        
+        public ICollection<Risk>? risk { get; set; }
+        public ICollection<Request>? request { get; set; }
     }
 }

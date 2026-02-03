@@ -70,6 +70,26 @@ namespace QM.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TableName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OldValues = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NewValues = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AffectedColumns = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PrimaryKey = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLogs", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
                 {
@@ -110,30 +130,6 @@ namespace QM.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Entities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Logs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    WorkEntity = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Year = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Occured = table.Column<bool>(type: "bit", nullable: false),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RiskName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Likelihood = table.Column<int>(type: "int", nullable: false),
-                    Impact = table.Column<int>(type: "int", nullable: false),
-                    Responsible = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    report = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PostLikelihood = table.Column<int>(type: "int", nullable: true),
-                    PostImpact = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Logs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -348,33 +344,6 @@ namespace QM.DataAccess.Migrations
                         name: "FK_ActionResponsibleMapping_Entities_ResponsibleId",
                         column: x => x.ResponsibleId,
                         principalTable: "Entities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "LogActionsMappings",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    logId = table.Column<int>(type: "int", nullable: false),
-                    ActionID = table.Column<int>(type: "int", nullable: false),
-                    ActionsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_LogActionsMappings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_LogActionsMappings_Actions_ActionsId",
-                        column: x => x.ActionsId,
-                        principalTable: "Actions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_LogActionsMappings_Logs_logId",
-                        column: x => x.logId,
-                        principalTable: "Logs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -647,16 +616,6 @@ namespace QM.DataAccess.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LogActionsMappings_ActionsId",
-                table: "LogActionsMappings",
-                column: "ActionsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_LogActionsMappings_logId",
-                table: "LogActionsMappings",
-                column: "logId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RequestActionMappings_ActionID",
                 table: "RequestActionMappings",
                 column: "ActionID");
@@ -762,7 +721,7 @@ namespace QM.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "LogActionsMappings");
+                name: "AuditLogs");
 
             migrationBuilder.DropTable(
                 name: "RequestActionMappings");
@@ -787,9 +746,6 @@ namespace QM.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "Logs");
 
             migrationBuilder.DropTable(
                 name: "Entities");

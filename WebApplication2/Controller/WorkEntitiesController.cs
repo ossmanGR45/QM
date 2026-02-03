@@ -37,5 +37,17 @@ namespace QM.Controller
 
             return Ok(records);
         }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateWorkEntity([FromBody] WorkEntity workEntity)
+        {
+            if (workEntity == null)
+                return BadRequest("Work Entity data is null.");
+
+            var _manager = new Manager<WorkEntity>(_uow);
+            var createdWorkEntity = await _manager.AddUpdateAsync(workEntity);
+            await _uow.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetWorkEntities), new { id = createdWorkEntity.Id }, createdWorkEntity);
+        }
     }
 }

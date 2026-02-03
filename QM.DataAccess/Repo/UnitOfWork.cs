@@ -24,26 +24,26 @@ namespace QM.DataAccess.Repo
 
 
 
-        public static UnitOfWork GetInstance()
-        {
+        //public static UnitOfWork GetInstance()
+        //{
 
 
-            string connectionString = "Server=localhost\\SQLEXPRESS;Database=QM;Trusted_Connection=true;TrustServerCertificate=true";
+        //    string connectionString = "Server=localhost\\SQLEXPRESS;Database=QM;Trusted_Connection=true;TrustServerCertificate=true";
 
             
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>() 
-                .UseSqlServer(connectionString)
-                .Options;
+        //    var options = new DbContextOptionsBuilder<ApplicationDbContext>() 
+        //        .UseSqlServer(connectionString)
+        //        .Options;
 
         
-            var context = new ApplicationDbContext(options);
+        //    var context = new ApplicationDbContext(options);
 
-            var unitOfWork = new UnitOfWork(context);
+        //    var unitOfWork = new UnitOfWork(context);
 
 
 
-            return unitOfWork;
-        }
+        //    return unitOfWork;
+        //}
 
         public ApplicationDbContext GetContext()
         {
@@ -52,7 +52,7 @@ namespace QM.DataAccess.Repo
         // The "Best Practice" way to get a Generic Repo without hardcoding properties
        
 
-        public async Task<int> SaveAsync()
+        public async Task<int> SaveChangesAsync()
         {
             return await context.SaveChangesAsync();
         }

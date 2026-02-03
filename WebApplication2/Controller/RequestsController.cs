@@ -71,17 +71,16 @@ namespace QM.Controller
             return Ok(records);
         }
 
-        [Authorize(Roles = "initiator,Manager")]
+        [Authorize(Roles = "Initiator,Risk Manager,Admin")]
         [HttpPost("create")]
-        public async Task<IActionResult> CreateRequest(RequestDto requestDto)
+        public async Task<IActionResult> CreateRequest([FromBody] RequestDto requestDto)
         {
-            if(requestDto == null) { 
+            if(requestDto == null ) { 
                 return BadRequest("Request cannot be null.");
             }
 
             var request = new Request
             {
-                Id = requestDto.Id,
                 WorkEntity = requestDto.WorkEntity,
                 Year = requestDto.Year,
                 Category = requestDto.Category,
@@ -92,29 +91,32 @@ namespace QM.Controller
                 Description = requestDto.Description,
                 Status = requestDto.Status,
                 Occured = requestDto.Occured,
-                report = requestDto.Report
+                report = requestDto.Report,
+                RequestAction = new List<RequestActionMapping>()
             };
 
-            request.RequestAction = new List<RequestActionMapping>();
 
             foreach (var actionDto in requestDto.Actions)
             {
+                var mapping = new RequestActionMapping();
 
-
-                request.RequestAction.Add(new RequestActionMapping
+                if (actionDto.Id == null || actionDto.Id == 0)
                 {
-
-                    Action = (actionDto.Id == null) ? new Actions
+                    
+                    mapping.Action = new Actions
                     {
                         ActionDescription = actionDto.Description,
                         ActionType = (ActionType)actionDto.ActionType,
                         Custom = true
+                    };
+                }
+                else
+                {
+                    
+                    mapping.ActionID = actionDto.Id.Value;
+                }
 
-                    } : null,
-                    ActionID = (actionDto.Id == null) ? 0 : actionDto.Id.Value
-
-                });
-
+                request.RequestAction.Add(mapping);
             }
 
 
@@ -122,7 +124,7 @@ namespace QM.Controller
 
             var _manager = new Manager<Request>(_uow);
             var createdRequest = await _manager.AddUpdateAsync(request);
-            await _uow.SaveAsync();
+            await _uow.SaveChangesAsync();
             return CreatedAtAction(nameof(GetRequests), new { id = createdRequest.Id }, createdRequest);
 
         }
@@ -130,7 +132,7 @@ namespace QM.Controller
         
 
 
-        [Authorize(Roles = "Manager,Admin")]
+        [Authorize(Roles = "Initiator,Risk Manager,Admin")]
         [HttpPost("update")]
         public async Task<IActionResult> UpdateRequest(RequestDto requestDto)
         {
@@ -187,50 +189,19 @@ namespace QM.Controller
 
             if (requestDto.Status == RequestStatus.closed)
             {
-                var _managerLog = new Manager<Log>(_uow);
                 
 
-                Log newLog = new Log
-                {
-                    WorkEntity = request.WorkEntity,
-                    Year = request.Year,
-                    Occured = request.Occured,
-                    Category = request.Category,
-                    RiskName = request.Risk.RiskName,
-                    Likelihood = request.Likelihood,
-                    Impact = request.Impact,
-                    Responsible = request.Responsible,
-                    Description = request.Description,
-                    report = request.report,
-                    PostImpact = request.PostImpact,
-                    PostLikelihood = request.PostLikelihood
-
-
-                };
-
-                newLog.LogActionsMappings = new List<LogActionsMapping>();
-                foreach (var reqAction in request.RequestAction)
-                {
-                    newLog.LogActionsMappings.Add(new LogActionsMapping
-                    {
-                        ActionID = reqAction.ActionID
-                    });
-                }
-
-                await _managerLog.AddUpdateAsync(newLog);
                 await _manager.DeleteAsync(request);
-
-                await _uow.SaveAsync();
+                await _uow.SaveChangesAsync();
                 return Ok("nice");
 
             }
 
             // i want to break the loop of resending the request if it got rejected
 
-
-
             request.Status = requestDto.Status;
             var result = await _manager.AddUpdateAsync(request);
+            await _uow.SaveChangesAsync();
             return Ok("changed successfuly");
 
 
