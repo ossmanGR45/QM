@@ -11,8 +11,10 @@ namespace QM.Models.DataModels
         public string? ActionDescription { get; set; } = null;
         public ActionType? ActionType { get; set; } = null;
         public bool? Custom { get; set; } = null;
-               
+        
+
         // Navigation Properties
+       
         public ICollection<RiskActionMapping>? RiskActions { get; set; } = null;
         public ICollection<ActionCauseMapping>? ActionCauses { get; set; } = null;
         public ICollection<RequestActionMapping>? RequestActions { get; set; } = null;
