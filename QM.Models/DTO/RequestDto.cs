@@ -9,26 +9,31 @@ namespace QM.Models.DTO
 {
     public class RequestDto : EntityBase
     {
-        public string? WorkEntity { get; set; }
+        public string? Department { get; set; }
         public DateTime? Year { get; set; }
         public string? Category { get; set; }
-
-        // Using the Enums directly is fine as long as they are sent as Ints or Strings from JSON
         public Likelihood? Likelihood { get; set; }
         public Impact? Impact { get; set; }
+        public Likelihood? PostLikelihood { get; set; } = null;
+        public Impact? PostImpact { get; set; } = null;
+        public DateTime? ExpectedTime { get; set; } = null;
+        public string? Description { get; set; } = null;
+        public RequestStatus? Status { get; set; } = null;
+        public bool? Occured { get; set; } = null;
+        public string? rejectReason { get; set; } = null;
+        public bool? ReDirected { get; set; } = null;
+        public int? ResponsibleId { get; set; } = null;
+        public int? UserId { get; set; } = null;
+        public int? RiskId { get; set; } = null;
 
-        public DateTime? ExpectedTime { get; set; }
-        public string? Responsible { get; set; }
-        public string? Description { get; set; }
-        public RequestStatus? Status { get; set; }
-        public bool? Occured { get; set; }
-        public string? Report { get; set; }
+        
 
 
-        // This is where the React app sends the list of mixed actions
+
         public List<ActionInputDto>? Actions { get; set; } = new List<ActionInputDto>();
 
-        // You can follow the same pattern for Risks if needed
-        public int? RiskId { get; set; }
+
+
+
     }
 }

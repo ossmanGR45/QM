@@ -1,3 +1,4 @@
+using Humanizer;
 using LinqKit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using QM.Models.DTO;
 using QM.Models.Mapping;
 using QM.Utility;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using static QM.Models.Enums;
 
 namespace QM.Controller
@@ -27,7 +29,7 @@ namespace QM.Controller
             int? likelihood = null,
             int? impact = null,
             DateTime? expectedTime = null,
-            string? responsible = null,
+            int? responsibleId = null,
             string? description = null,
             int? status = null,
             bool? occured = null,
@@ -40,7 +42,7 @@ namespace QM.Controller
             if (id.HasValue)
                 filter = filter.And(r => r.Id == id);
 
-            if( year.HasValue)
+            if (year.HasValue)
                 filter = filter.And(r => r.Year == year);
 
             if (likelihood.HasValue)
@@ -52,8 +54,8 @@ namespace QM.Controller
             if (expectedTime.HasValue)
                 filter = filter.And(r => r.ExpectedTime == expectedTime);
 
-            if (!string.IsNullOrEmpty(responsible))
-                filter = filter.And(r => r.Responsible.Contains(responsible));
+            if (responsibleId.HasValue)
+                filter = filter.And(r => r.ResponsibleId == responsibleId);
 
             if (!string.IsNullOrEmpty(description))
                 filter = filter.And(r => r.Description.Contains(description));
@@ -71,142 +73,128 @@ namespace QM.Controller
             return Ok(records);
         }
 
+
+
+
+
         [Authorize(Roles = "Initiator,Risk Manager,Admin")]
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateRequest([FromBody] RequestDto requestDto)
+        [HttpPost("addUpdate")]
+        public async Task<IActionResult> AddUpdate([FromBody] RequestDto dto)
         {
-            if(requestDto == null ) { 
-                return BadRequest("Request cannot be null.");
+            // Retrieve the Name Identifier (often the User ID)
+            var stringUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(stringUserId))
+            {
+                return Unauthorized("User isn't logged in.");
             }
 
-            var request = new Request
+            if (!int.TryParse(stringUserId, out int userId))
             {
-                WorkEntity = requestDto.WorkEntity,
-                Year = requestDto.Year,
-                Category = requestDto.Category,
-                Likelihood = requestDto.Likelihood,
-                Impact = requestDto.Impact,
-                ExpectedTime = requestDto.ExpectedTime,
-                Responsible = requestDto.Responsible,
-                Description = requestDto.Description,
-                Status = requestDto.Status,
-                Occured = requestDto.Occured,
-                report = requestDto.Report,
-                RequestAction = new List<RequestActionMapping>()
-            };
+                return BadRequest("Invalid User ID in token.");
+            }
 
+            // Retrieve the Role
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
-            foreach (var actionDto in requestDto.Actions)
+            if (dto == null) return BadRequest("Data is null");
+
+            var _manager = new Manager<Request>(_uow);
+            Request request;
+            bool isNew = (dto.Id == 0);
+
+            // 1. Logic for Add vs Update
+            if (isNew)
             {
-                var mapping = new RequestActionMapping();
+                request = new Request { Status = RequestStatus.InProgress };
+                await _manager.AddUpdateAsync(request); // Marks for insertion
+            }
+            else
+            {
+                // Load with Actions included so we can Clear() them safely
+                request = await _manager.GetByIdAsync(dto.Id, new List<string> { "RequestActions" });
+                if (request == null) return NotFound();
+            }
 
-                if (actionDto.Id == null || actionDto.Id == 0)
+            // 2. Map basic data
+            request.Description = dto.Description;
+            request.Department = dto.Department;
+            request.Likelihood = dto.Likelihood;
+            request.Impact = dto.Impact;
+            request.PostLikelihood = dto.PostLikelihood;
+            request.PostImpact = dto.PostImpact;
+            request.UserId = userId;
+            request.ResponsibleId = dto.ResponsibleId;
+            request.RiskId = dto.RiskId;
+            request.ReDirected = (userRole == "Admin" || userRole == "Initi") ? false : true;
+
+            // 3. Sync Actions (Automatic ID linking)
+            request.RequestActions?.Clear();
+            foreach (var actionDto in dto.Actions)
+            {
+                request.RequestActions.Add(new RequestActionMapping
                 {
-                    
-                    mapping.Action = new Actions
+                    ActionID = actionDto.Id ?? 0,
+                    Action = (actionDto.Id == 0 || actionDto.Id == null) ? new Actions
                     {
-                        ActionDescription = actionDto.Description,
+                        ActionDescription = actionDto.ActionDescription,
                         ActionType = (ActionType)actionDto.ActionType,
                         Custom = true
-                    };
-                }
-                else
-                {
-                    
-                    mapping.ActionID = actionDto.Id.Value;
-                }
-
-                request.RequestAction.Add(mapping);
+                    } : null
+                });
             }
 
+            // 4. CALL THE STATUS & NOTIFICATION FUNCTION
+            await ProcessStatusAndNotifications(request, dto, isNew);
 
-
-
-            var _manager = new Manager<Request>(_uow);
-            var createdRequest = await _manager.AddUpdateAsync(request);
+            // 5. THE SAVE POINT (Everything fails if this fails)
             await _uow.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetRequests), new { id = createdRequest.Id }, createdRequest);
 
+            return Ok("succefull");
         }
 
-        
-
-
-        [Authorize(Roles = "Initiator,Risk Manager,Admin")]
-        [HttpPost("update")]
-        public async Task<IActionResult> UpdateRequest(RequestDto requestDto)
+        private async Task ProcessStatusAndNotifications(Request request, RequestDto dto, bool isNew)
         {
+            // Retrieve the Name Identifier (often the User ID)
+            var stringUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (requestDto == null || requestDto.Id == 0)
+
+            int userId = int.Parse(stringUserId);
+
+
+            // Retrieve the Role
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            notificationType finalNotifType = notificationType.updated;
+
+            if (isNew || userRole == "Risk Manager")
             {
-                return BadRequest("Invalid request id");
+                finalNotifType = notificationType.created;
+            }
+            else if (dto.Status.HasValue)
+            {
+                request.Status = dto.Status.Value;
+                request.rejectReason = dto.rejectReason;
+
+                // Map your enum values
+                if (dto.Status == RequestStatus.Accepted) finalNotifType = notificationType.accept;
+                else if (dto.Status == RequestStatus.Rejected) finalNotifType = notificationType.reject;
             }
 
-            var _manager = new Manager<Request>(_uow);
-
-            var request = await _manager.GetByIdAsync(requestDto.Id, "RequestRisk,RequestAction".ToStringList());
-
-            if (request == null)
+            // Create the Notification record using your specialized model
+            var _notifManager = new Manager<NotificationModel>(_uow);
+            await _notifManager.AddUpdateAsync(new NotificationModel
             {
-                return NotFound($"Request with ID {requestDto.Id} not found.");
-            }
-
-
-            if(requestDto.Report != null)
-            {
-                request.report = requestDto.Report;
-            }
-
-
-
-            if (request.Status == RequestStatus.InProgress && requestDto.Status != RequestStatus.underReview)
-            {
-
-                foreach (var actionDto in requestDto.Actions)
-                {
-
-                    request.RequestAction.Add(new RequestActionMapping
-                    {
-
-                        Action = (actionDto.Id == null) ? new Actions
-                        {
-                            ActionDescription = actionDto.Description!,
-                            ActionType = (ActionType)actionDto.ActionType!,
-                            Custom = true
-
-                        } : null,
-                        ActionID = (actionDto.Id == null) ? 0 : actionDto.Id.Value
-
-                    });
-
-                }
-
-                var updatedRequest = await _manager.AddUpdateAsync(request);
-                return Ok("request updated");
-            }
+                requestId = request.Id,
+                // If new, notify the Responsible party. If update, notify the User (creator).
+                UserId = userId,
+                status = finalNotifType,
+                requestType = requestType.Incident,
+                createdAt = DateTime.Now
+            });
 
             
-
-            if (requestDto.Status == RequestStatus.closed)
-            {
-                
-
-                await _manager.DeleteAsync(request);
-                await _uow.SaveChangesAsync();
-                return Ok("nice");
-
-            }
-
-            // i want to break the loop of resending the request if it got rejected
-
-            request.Status = requestDto.Status;
-            var result = await _manager.AddUpdateAsync(request);
-            await _uow.SaveChangesAsync();
-            return Ok("changed successfuly");
-
-
         }
-
 
 
     }

@@ -24,9 +24,10 @@ namespace QM.DataAccess.Data
         public DbSet<StrategicGoal> StrategicGoals { get; set; }
         public DbSet<Actions> Actions { get; set; }
         public DbSet<Cause> Causes { get; set; }
-        public DbSet<Responsible> Entities { get; set; }
+        public DbSet<Responsible> Responsible { get; set; }
         public DbSet<Request> RiskRequests { get; set; }
-        public DbSet<WorkEntity> Responsibles { get; set; }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<NotificationModel> Notifications { get; set; }
 
 
 
@@ -36,7 +37,7 @@ namespace QM.DataAccess.Data
         public DbSet<RiskStrategicGoalMapping> RiskGoalMappings { get; set; }
         public DbSet<RequestActionMapping> RequestActionMappings { get; set; }
         public DbSet<RequestCauseMapping> RequestCauseMappings { get; set; }
-        public DbSet<RequestResponsibleMapping> RequestEntityMappings { get; set; }
+        
 
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

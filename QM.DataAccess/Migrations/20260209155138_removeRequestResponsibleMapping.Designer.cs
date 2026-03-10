@@ -12,8 +12,8 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260109172630_Null3")]
-    partial class Null3
+    [Migration("20260209155138_removeRequestResponsibleMapping")]
+    partial class removeRequestResponsibleMapping
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,8 +46,8 @@ namespace QM.DataAccess.Migrations
                     b.Property<string>("OldValues")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrimaryKey")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PrimaryKey")
+                        .HasColumnType("int");
 
                     b.Property<string>("TableName")
                         .HasColumnType("nvarchar(max)");
@@ -164,12 +164,10 @@ namespace QM.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -205,12 +203,10 @@ namespace QM.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -313,8 +309,8 @@ namespace QM.DataAccess.Migrations
                     b.Property<int?>("PostLikelihood")
                         .HasColumnType("int");
 
-                    b.Property<string>("Responsible")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("ResponsibleId1")
+                        .HasColumnType("int");
 
                     b.Property<int?>("RiskId")
                         .HasColumnType("int");
@@ -335,6 +331,8 @@ namespace QM.DataAccess.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResponsibleId1");
 
                     b.HasIndex("RiskId");
 
@@ -366,7 +364,7 @@ namespace QM.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Entities");
+                    b.ToTable("Responsible");
                 });
 
             modelBuilder.Entity("QM.Models.DataModels.Risk", b =>
@@ -459,6 +457,9 @@ namespace QM.DataAccess.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -519,7 +520,7 @@ namespace QM.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Responsibles");
+                    b.ToTable("WorkEntity");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.ActionCauseMapping", b =>
@@ -616,30 +617,6 @@ namespace QM.DataAccess.Migrations
                     b.HasIndex("RequestID");
 
                     b.ToTable("RequestCauseMappings");
-                });
-
-            modelBuilder.Entity("QM.Models.Mapping.RequestResponsibleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResponsibleID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasIndex("ResponsibleID");
-
-                    b.ToTable("RequestEntityMappings");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
@@ -776,6 +753,10 @@ namespace QM.DataAccess.Migrations
 
             modelBuilder.Entity("QM.Models.DataModels.Request", b =>
                 {
+                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
+                        .WithMany("Requests")
+                        .HasForeignKey("ResponsibleId1");
+
                     b.HasOne("QM.Models.DataModels.Risk", "Risk")
                         .WithMany("Requests")
                         .HasForeignKey("RiskId");
@@ -783,6 +764,8 @@ namespace QM.DataAccess.Migrations
                     b.HasOne("QM.Models.DataModels.User", "User")
                         .WithMany("request")
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Responsible");
 
                     b.Navigation("Risk");
 
@@ -882,25 +865,6 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Request");
                 });
 
-            modelBuilder.Entity("QM.Models.Mapping.RequestResponsibleMapping", b =>
-                {
-                    b.HasOne("QM.Models.DataModels.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
-                        .WithMany()
-                        .HasForeignKey("ResponsibleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
-
-                    b.Navigation("Responsible");
-                });
-
             modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
                 {
                     b.HasOne("QM.Models.DataModels.Actions", "Action")
@@ -991,6 +955,8 @@ namespace QM.DataAccess.Migrations
             modelBuilder.Entity("QM.Models.DataModels.Responsible", b =>
                 {
                     b.Navigation("ActionResponsibles");
+
+                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("QM.Models.DataModels.Risk", b =>

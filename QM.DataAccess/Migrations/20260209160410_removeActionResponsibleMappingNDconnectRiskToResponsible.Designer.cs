@@ -12,8 +12,8 @@ using QM.DataAccess.Data;
 namespace QM.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260108191800_theBigBang")]
-    partial class theBigBang
+    [Migration("20260209160410_removeActionResponsibleMappingNDconnectRiskToResponsible")]
+    partial class removeActionResponsibleMappingNDconnectRiskToResponsible
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,30 +35,24 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AffectedColumns")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NewValues")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OldValues")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrimaryKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("PrimaryKey")
+                        .HasColumnType("int");
 
                     b.Property<string>("TableName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -170,12 +164,10 @@ namespace QM.DataAccess.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -211,12 +203,10 @@ namespace QM.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -259,7 +249,6 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CategoryName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -277,10 +266,9 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CauseDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Custom")
+                    b.Property<bool?>("Custom")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -298,23 +286,21 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Category")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpectedTime")
+                    b.Property<DateTime?>("ExpectedTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("Impact")
+                    b.Property<int?>("Impact")
                         .HasColumnType("int");
 
-                    b.Property<int>("Likelihood")
+                    b.Property<int?>("Likelihood")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Occured")
+                    b.Property<bool?>("Occured")
                         .HasColumnType("bit");
 
                     b.Property<int?>("PostImpact")
@@ -323,30 +309,30 @@ namespace QM.DataAccess.Migrations
                     b.Property<int?>("PostLikelihood")
                         .HasColumnType("int");
 
-                    b.Property<string>("Responsible")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RiskId")
+                    b.Property<int?>("ResponsibleId1")
                         .HasColumnType("int");
 
-                    b.Property<int>("Status")
+                    b.Property<int?>("RiskId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.Property<string>("WorkEntity")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Year")
+                    b.Property<DateTime?>("Year")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("report")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResponsibleId1");
 
                     b.HasIndex("RiskId");
 
@@ -365,24 +351,20 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ContactEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactPhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EntityName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Entities");
+                    b.ToTable("Responsible");
                 });
 
             modelBuilder.Entity("QM.Models.DataModels.Risk", b =>
@@ -397,33 +379,35 @@ namespace QM.DataAccess.Migrations
                     b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Custom")
+                    b.Property<bool?>("Custom")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Impact")
+                    b.Property<int?>("Impact")
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ResponsibleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RiskDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RiskName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("likelihood")
+                    b.Property<int?>("likelihood")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryID");
+
+                    b.HasIndex("ResponsibleId");
 
                     b.HasIndex("UserId");
 
@@ -440,11 +424,9 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("GoalDescription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GoalReference")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -480,6 +462,9 @@ namespace QM.DataAccess.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<int?>("ManagerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -496,6 +481,12 @@ namespace QM.DataAccess.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -530,12 +521,11 @@ namespace QM.DataAccess.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Responsibles");
+                    b.ToTable("WorkEntity");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.ActionCauseMapping", b =>
@@ -560,30 +550,6 @@ namespace QM.DataAccess.Migrations
                     b.HasIndex("CauseID");
 
                     b.ToTable("ActionCauseMappings");
-                });
-
-            modelBuilder.Entity("QM.Models.Mapping.ActionResponsibleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ActionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResponsibleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ActionId");
-
-                    b.HasIndex("ResponsibleId");
-
-                    b.ToTable("ActionResponsibleMapping");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.RequestActionMapping", b =>
@@ -632,30 +598,6 @@ namespace QM.DataAccess.Migrations
                     b.HasIndex("RequestID");
 
                     b.ToTable("RequestCauseMappings");
-                });
-
-            modelBuilder.Entity("QM.Models.Mapping.RequestResponsibleMapping", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("RequestID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResponsibleID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestID");
-
-                    b.HasIndex("ResponsibleID");
-
-                    b.ToTable("RequestEntityMappings");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
@@ -792,17 +734,19 @@ namespace QM.DataAccess.Migrations
 
             modelBuilder.Entity("QM.Models.DataModels.Request", b =>
                 {
+                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
+                        .WithMany("Requests")
+                        .HasForeignKey("ResponsibleId1");
+
                     b.HasOne("QM.Models.DataModels.Risk", "Risk")
                         .WithMany("Requests")
-                        .HasForeignKey("RiskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RiskId");
 
                     b.HasOne("QM.Models.DataModels.User", "User")
                         .WithMany("request")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Responsible");
 
                     b.Navigation("Risk");
 
@@ -817,11 +761,17 @@ namespace QM.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
+                        .WithMany("Risk")
+                        .HasForeignKey("ResponsibleId");
+
                     b.HasOne("QM.Models.DataModels.User", "User")
                         .WithMany("risk")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Category");
+
+                    b.Navigation("Responsible");
 
                     b.Navigation("User");
                 });
@@ -843,25 +793,6 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Action");
 
                     b.Navigation("Cause");
-                });
-
-            modelBuilder.Entity("QM.Models.Mapping.ActionResponsibleMapping", b =>
-                {
-                    b.HasOne("QM.Models.DataModels.Actions", "Action")
-                        .WithMany("ActionResponsibles")
-                        .HasForeignKey("ActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
-                        .WithMany("ActionResponsibles")
-                        .HasForeignKey("ResponsibleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Action");
-
-                    b.Navigation("Responsible");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.RequestActionMapping", b =>
@@ -900,25 +831,6 @@ namespace QM.DataAccess.Migrations
                     b.Navigation("Cause");
 
                     b.Navigation("Request");
-                });
-
-            modelBuilder.Entity("QM.Models.Mapping.RequestResponsibleMapping", b =>
-                {
-                    b.HasOne("QM.Models.DataModels.Request", "Request")
-                        .WithMany()
-                        .HasForeignKey("RequestID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("QM.Models.DataModels.Responsible", "Responsible")
-                        .WithMany()
-                        .HasForeignKey("ResponsibleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Request");
-
-                    b.Navigation("Responsible");
                 });
 
             modelBuilder.Entity("QM.Models.Mapping.RiskActionMapping", b =>
@@ -982,8 +894,6 @@ namespace QM.DataAccess.Migrations
                 {
                     b.Navigation("ActionCauses");
 
-                    b.Navigation("ActionResponsibles");
-
                     b.Navigation("RequestActions");
 
                     b.Navigation("RiskActions");
@@ -1010,7 +920,9 @@ namespace QM.DataAccess.Migrations
 
             modelBuilder.Entity("QM.Models.DataModels.Responsible", b =>
                 {
-                    b.Navigation("ActionResponsibles");
+                    b.Navigation("Requests");
+
+                    b.Navigation("Risk");
                 });
 
             modelBuilder.Entity("QM.Models.DataModels.Risk", b =>

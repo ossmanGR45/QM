@@ -8,8 +8,7 @@ namespace QM.Models.DataModels
         
 
         public string? CategoryName { get; set; }
-
+         
         // Navigation Property: One Category has many Risks
-        public ICollection<Risk>? Risks { get; set; }
     }
 }

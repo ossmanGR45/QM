@@ -10,9 +10,9 @@ namespace QM.Models.DTO
     public class ActionInputDto
     {
 
-        public int? Id { get; set; }
+        public int? Id { get; set; } 
 
-        public string? Description { get; set; }
+        public string? ActionDescription { get; set; }
 
         public ActionType? ActionType { get; set; }
 
