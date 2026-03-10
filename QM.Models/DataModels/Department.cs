@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QM.Models.DataModels
 {
-    public class WorkEntity : EntityBase
+    public class Department : EntityBase
     {
 
 

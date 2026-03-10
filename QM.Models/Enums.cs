@@ -12,7 +12,7 @@ namespace QM.Models
         {
             Avoidance = 0,
             Reduction = 1
-        }
+        } 
 
         public enum RequestStatus
         {
@@ -20,7 +20,6 @@ namespace QM.Models
             InProgress = 1,
             underReview = 2,
             Accepted = 3,
-            closed = 4,
         }
 
         public enum Likelihood
@@ -39,6 +38,20 @@ namespace QM.Models
             Medium = 3,
             High = 4,
             Critical = 5
+        }
+
+        public enum requestType
+        {
+            Risk = 0,
+            Incident = 1
+        }
+
+        public enum notificationType
+        {
+            reject = 0,
+            accept = 1,
+            updated = 2,
+            created = 3
         }
     }
 }

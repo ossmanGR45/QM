@@ -12,6 +12,7 @@ namespace QM.Models.DataModels
         public string? ContactPhoneNumber { get; set; } = null;
 
         // Navigation Properties
-        public ICollection<ActionResponsibleMapping>? ActionResponsibles { get; set; } = null;
+        public ICollection<Risk>? Risk { get; set; } = null;
+        public ICollection<Request>? Requests { get; set; } = null;
     }
 }
